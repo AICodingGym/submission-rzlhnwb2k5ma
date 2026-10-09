@@ -11,6 +11,13 @@ RUN apt-get -qq update && apt-get install -y \
     gnupg-agent \
     software-properties-common
 
+
+# Fix to download files directly from Debian and hopefully avoid outdated files
+RUN sed -i -e 's|deb.debian.org/debian-security|archive.debian.org/debian-security|g' \
+           -e 's|deb.debian.org/debian|archive.debian.org/debian|g' \
+           -e '/bullseye-updates/d' /etc/apt/sources.list \
+ && echo 'Acquire::Check-Valid-Until "false";' > /etc/apt/apt.conf.d/99archive
+
 # Install docker
 RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - \
     && add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
