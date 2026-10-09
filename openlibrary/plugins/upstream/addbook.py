@@ -74,7 +74,9 @@ def make_author(key: str, name: str) -> Author:
     <Author: '/authors/OL123A'>
     """
     key = "/authors/" + key
-    return web.ctx.site.new(key, {"key": key, "type": {"key": "/type/author"}, "name": name})
+    return web.ctx.site.new(
+        key, {"key": key, "type": {"key": "/type/author"}, "name": name}
+    )
 
 
 def make_work(doc: dict[str, str | list]) -> web.Storage:
@@ -85,7 +87,10 @@ def make_work(doc: dict[str, str | list]) -> web.Storage:
     """
     w = web.storage(doc)
 
-    w.authors = [make_author(key, name) for key, name in zip(doc.get("author_key", []), doc.get("author_name", []))]
+    w.authors = [
+        make_author(key, name)
+        for key, name in zip(doc.get("author_key", []), doc.get("author_name", []))
+    ]
 
     w.setdefault("cover_url", "/images/icons/avatar_book-sm.png")
     w.setdefault("ia", [])
